@@ -1,6 +1,13 @@
+--drop database DB_SPECIALIST--Cannot drop database "DB_SPECIALIST" because it is currently in use.
+--alter database DB_SPECIALIST
 
-create database DB_SPECIALIST
+create database DATABASE_SPECIALIST
+COLLATE Japanese_CI_AS;  --nvarcvharだけでなくこれを設定しないと漢字が？？になる
 
+
+ -- Japanese_CI_ASは日本語用の照合順序です
+--漢字が入りそうな属性はnvarchar
+--なぜnvarchar(255)なのか
 /*担当者*/
 create table MANAGER(
 MANAGER_CODE varchar(3) primary key,
@@ -53,19 +60,21 @@ primary key(ORDER_NUMBER,PRODUCT_CODE),
     REFERENCES PRODUCT(PRODUCT_CODE),
 )
 
-
-/*在庫*/
-create table STOCK(
-STOCK_ROOM_CODE varchar(3),
-PRODUCT_CODE varchar(5),
-QTY int,
-primary key(STOCK_ROOM_CODE,PRODUCT_CODE))
-
 /*倉庫*/
 create table STOCK_ROOM(
 STOCK_ROOM_CODE varchar(3) primary key,
 STOCK_ROOM_NAME nvarchar(10) not null,
- CONSTRAINT FK_PRODUCT_CODE FOREIGN KEY (STOCK_ROOM_CODE)
-    REFERENCES STOCK(STOCK_ROOM_CODE)
+)
+
+
+/*在庫*/
+create table STOCK_PRODUCT(
+STOCK_ROOM_CODE varchar(3),
+PRODUCT_CODE varchar(5),
+QTY int,
+ CONSTRAINT FK_STOCK_ROOM_CODE_FOR_STOCK FOREIGN KEY (STOCK_ROOM_CODE)
+    REFERENCES STOCK_ROOM(STOCK_ROOM_CODE),
+ CONSTRAINT FK_PRODUCT_CODE_FOR_STOCK FOREIGN KEY (PRODUCT_CODE)
+    REFERENCES PRODUCT(PRODUCT_CODE)
 )
 
